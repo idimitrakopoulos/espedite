@@ -96,22 +96,32 @@ def generate_guid(*args):
 
 def check_filepath_exists(filename, separator):
     if os.path.isfile(sys.path[0] + separator + filename):
-        return 0
+        return True
     else:
-        return 1
+        return False
 
 
 def check_file_exists(filename):
     if os.path.isfile(filename):
-        return 0
+        return True
     else:
-        return 1
+        return False
 
 def check_folder_exists(path):
     if os.path.isdir(path):
-        return 0
+        return True
     else:
-        return 1
+        return False
+
+def check_executable_exists(executable, mandatory=False):
+    from distutils.spawn import find_executable
+    if not find_executable(executable):
+        if mandatory:
+            log.fatal("Mandatory executable '{}' wasn't found in your system. Exiting...".format(executable))
+            sys.exit(1)
+    else:
+        log.info("Executable '{}' was found in your system.".format(executable))
+        return True
 
 
 def get_class(fully_qualified_path, module_name, class_name, *instantiation):
@@ -129,6 +139,17 @@ def get_class(fully_qualified_path, module_name, class_name, *instantiation):
     instance = c(*instantiation)
     return instance
 
+def get_modified_files(path, reference_timestamp):
+    modified_files = []
+    for root, dirs, files in os.walk(path):
+        for basename in files:
+            if not basename == properties.timeStampFilename:
+                filename = os.path.join(root, basename)
+                status = os.stat(filename)
+
+                if float(status.st_mtime) > float(reference_timestamp):
+                    modified_files.append(filename)
+    return modified_files
 
 def ab_path_to_class(path, p):
     # pkg.module.ClassName
@@ -185,6 +206,7 @@ class PropertyReader(object):
                                                               self.property_file)
         self.script_name = read_property_from_file("scriptName", "variousProperties", self.property_file)
         self.osDirSeparator = read_property_from_file("osDirSeparator", "variousProperties", self.property_file)
+        self.timeStampFilename = read_property_from_file("tsFilename", "variousProperties", self.property_file)
 
         # [loggingProperties]
         self.custom_logging_format = read_property_from_file("customLoggingFormat", "loggingProperties",
@@ -192,8 +214,8 @@ class PropertyReader(object):
 
 
         # MANIFEST.MF
-        if check_file_exists(self.manifest_file) == 1:
-            print "File '" + self.manifest_file + "' does not exist. Sorry, you cannot work with an unreleased version of onomix. If you must work with it please execute 'cp " + self.manifest_template_file + " " + self.manifest_file + "' and retry running the script."
+        if not check_file_exists(self.manifest_file):
+            print "File '" + self.manifest_file + "' does not exist. Sorry, you cannot work with an unreleased version of this script. If you must work with it please execute 'cp " + self.manifest_template_file + " " + self.manifest_file + "' and retry running the script."
             sys.exit()
         self.version = read_property_from_file("version", self.script_name, self.manifest_file)
         self.revision = read_property_from_file("revision", self.script_name, self.manifest_file)
