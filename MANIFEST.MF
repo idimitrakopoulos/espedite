@@ -1,4 +1,4 @@
 [espedite]
-version = 0.1
+version = 0.10
 revision = 0
 buildDate = 0
