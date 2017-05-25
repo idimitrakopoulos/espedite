@@ -19,11 +19,9 @@ mainOptionsGroup.add_option("-d", "--device", dest="device", help="Device path o
 
 parser.add_option_group(mainOptionsGroup)
 
-# Common Options
-commonOptionsGroup = OptionGroup(parser, "Common Options", "(Common throughout all actions supported by the script)")
-
-
-parser.add_option_group(commonOptionsGroup)
+# # Common Options
+# commonOptionsGroup = OptionGroup(parser, "Common Options", "(Common throughout all actions supported by the script)")
+# parser.add_option_group(commonOptionsGroup)
 
 # Logging Options
 loggingOptionsGroup = OptionGroup(parser, "Logging Options", "(Regulate the logging of the script. Default loglevel: INFO)")
@@ -33,7 +31,6 @@ parser.add_option_group(loggingOptionsGroup)
 
 # Parse arguments
 (options, args) = parser.parse_args()
-
 
 # Make sure all mandatory options are provided
 for m in mandatory_options:
