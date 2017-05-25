@@ -3,7 +3,7 @@ from optparse import OptionParser, OptionGroup
 
 from util.toolkit import properties, log, logging
 
-mandatory_options = ['tld', 'length', 'workers']
+mandatory_options = []
 
 # Init Optparser
 parser = OptionParser(
@@ -11,20 +11,17 @@ parser = OptionParser(
 
 # Main options
 mainOptionsGroup = OptionGroup(parser, "Main Options", "(Main script options)")
-mainOptionsGroup.add_option("-l", "--length", dest="length", help="Domain name length", metavar="<length>")
-mainOptionsGroup.add_option("-t", "--tld", dest="tld", help="TLD to search in", metavar="<tld>")
-mainOptionsGroup.add_option("-w", "--workers", dest="workers", help="Workers (threads) to be used", metavar="<workers>")
+mainOptionsGroup.add_option("-i", "--install", action="store_const", const=1, dest="installmode", default=0, help="Deploy code")
+mainOptionsGroup.add_option("-I", "--installc", action="store_const", const=2, dest="installmode", default=0, help="Crosscompile and deploy code")
+
+mainOptionsGroup.add_option("-p", "--profile", dest="profile", help="Pre-existing profile", metavar="<profile>")
+mainOptionsGroup.add_option("-d", "--device", dest="device", help="Device path of your board", metavar="<device>", default="/dev/ttyUSB0")
 
 parser.add_option_group(mainOptionsGroup)
 
 # Common Options
 commonOptionsGroup = OptionGroup(parser, "Common Options", "(Common throughout all actions supported by the script)")
 
-commonOptionsGroup.add_option("-S", "--silent", action="store_true", dest="silent", default=False,
-                              help="Silent mode (don't send any email notifications)")
-
-commonOptionsGroup.add_option("-i", "--identifier", dest="identifier", help="A unique identifier",
-                              metavar="<IDENTIFIER>")
 
 parser.add_option_group(commonOptionsGroup)
 

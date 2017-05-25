@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="5d2ac5ec-6468-46aa-85d8-a1775d503b8a" name="paragonium" url="http://paragonium.com">
+        <fileTransfer host="paragonium.com" port="22" rootFolder="/home/idimitrakopoulos" accessType="SFTP" password="dfcedf9bdfccdfccdf84dfdadfcbdf8edf8e" username="idimitrakopoulos">
+          <advancedOptions>
+            <advancedOptions controlEncoding="utf-8" dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
