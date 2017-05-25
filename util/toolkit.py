@@ -38,7 +38,7 @@ def print_os_information():
 
 def print_script_information():
     log.info(
-        "PyJi Script version  '" + properties.version + "  r" + properties.revision + "' built on '" + properties.build_date + "'")
+        "Script version  '" + properties.version + "  r" + properties.revision + "' built on '" + properties.build_date + "'")
 
 
 def read_property_from_file(propertyName, propertiesSectionName, propertiesFilename, warnIfEmpty=True):
