@@ -2,8 +2,8 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="5d2ac5ec-6468-46aa-85d8-a1775d503b8a" name="paragonium" url="http://paragonium.com">
-        <fileTransfer host="paragonium.com" port="22" rootFolder="/home/idimitrakopoulos" accessType="SFTP" password="dfcedf9bdfccdfccdf84dfdadfcbdf8edf8e" username="idimitrakopoulos">
+      <webServer id="5d2ac5ec-6468-46aa-85d8-a1775d503b8a" name="aimless" url="http://aimless">
+        <fileTransfer host="aimless" port="22" rootFolder="/home/idimitrakopoulos" accessType="SFTP" password="dfc8df9edfc3dfc6df99dfd3dfd9" username="idimitrakopoulos">
           <advancedOptions>
             <advancedOptions controlEncoding="utf-8" dataProtectionLevel="Private" />
           </advancedOptions>
