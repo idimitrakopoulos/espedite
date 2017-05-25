@@ -3,7 +3,9 @@
 import util.opt_parser as parser
 from util.toolkit import log
 
-log.debug(parser.options.installmode)
+log.info(parser.options.path)
+
+
 
 # Salute!
 log.info("Bye bye! :-)")

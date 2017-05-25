@@ -1,9 +1,10 @@
+import os
 import sys
-from optparse import OptionParser, OptionGroup
+from optparse import OptionParser, OptionGroup, SUPPRESS_HELP
 
 from util.toolkit import properties, log, logging
 
-mandatory_options = []
+mandatory_options = ['path', 'device']
 
 # Init Optparser
 parser = OptionParser(
@@ -14,6 +15,7 @@ mainOptionsGroup = OptionGroup(parser, "Main Options", "(Main script options)")
 mainOptionsGroup.add_option("-i", "--install", action="store_const", const=1, dest="installmode", default=0, help="Deploy code")
 mainOptionsGroup.add_option("-I", "--installc", action="store_const", const=2, dest="installmode", default=0, help="Crosscompile and deploy code")
 
+mainOptionsGroup.add_option("-P", "--path", dest="path", help=SUPPRESS_HELP, metavar="<path>", default=os.environ["PWD"])
 mainOptionsGroup.add_option("-p", "--profile", dest="profile", help="Pre-existing profile", metavar="<profile>")
 mainOptionsGroup.add_option("-d", "--device", dest="device", help="Device path of your board", metavar="<device>", default="/dev/ttyUSB0")
 
@@ -39,6 +41,8 @@ for m in mandatory_options:
         parser.print_help()
         sys.exit()
 
+# Make path absolute in case it was given as . or ../ etc
+# options.path = os.path.abspath(options.path)
 
 # Set logging level
 if options.verbose == 1:
