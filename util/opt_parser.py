@@ -14,10 +14,15 @@ parser = OptionParser(
 mainOptionsGroup = OptionGroup(parser, "Main Options", "(Main script options)")
 mainOptionsGroup.add_option("-i", "--install", action="store_const", const=1, dest="installmode", default=0, help="Deploy code")
 mainOptionsGroup.add_option("-I", "--installc", action="store_const", const=2, dest="installmode", default=0, help="Crosscompile and deploy code")
+mainOptionsGroup.add_option("-u", "--update", action="store_const", const=3, dest="installmode", default=0, help="Update code")
+mainOptionsGroup.add_option("-f", "--format", action="store_const", const=1, dest="format", default=0, help="Format board")
+mainOptionsGroup.add_option("-c", "--connect", action="store_true", dest="connect", default=False, help="Connect to your board after the operation")
 
 mainOptionsGroup.add_option("-P", "--path", dest="path", help=SUPPRESS_HELP, metavar="<path>", default=os.environ["PWD"])
 mainOptionsGroup.add_option("-p", "--profile", dest="profile", help="Pre-existing profile", metavar="<profile>")
+mainOptionsGroup.add_option("-s", "--skip", dest="skip", help="Specify a file that contains files and folders that should be skipped", metavar="<skip>")
 mainOptionsGroup.add_option("-d", "--device", dest="device", help="Device path of your board", metavar="<device>", default="/dev/ttyUSB0")
+mainOptionsGroup.add_option("-b", "--baud", dest="baud", help="Baud speed for connecting to your board", metavar="<baud>", default="115200")
 
 parser.add_option_group(mainOptionsGroup)
 

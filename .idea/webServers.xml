@@ -10,6 +10,14 @@
           <option name="port" value="22" />
         </fileTransfer>
       </webServer>
+      <webServer id="0ee77009-5da1-4b38-8070-6da512f8f1f1" name="paragonium" url="http://paragonium.com">
+        <fileTransfer host="paragonium.com" port="22" rootFolder="/home/idimitrakopoulos" accessType="SFTP" password="dfcedf9bdfccdfccdf84dfdadfcbdf8edf8e" username="idimitrakopoulos">
+          <advancedOptions>
+            <advancedOptions controlEncoding="utf-8" dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
     </option>
   </component>
 </project>

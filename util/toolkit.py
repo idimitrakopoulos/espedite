@@ -5,6 +5,7 @@ import platform
 import random
 import signal
 import socket
+import subprocess
 import sys
 import time
 from ConfigParser import RawConfigParser
@@ -31,6 +32,9 @@ def terminate_process(pid):
     log.warn("kill " + pid)
     os.kill(int(pid), signal.SIGTERM)
 
+def execute_shell_command(command, shell=False):
+    log.debug("Executing command '{}'".format(command))
+    return subprocess.call(command.split(), shell=shell)
 
 def print_os_information():
     log.info("Script running on '" + " ".join(platform.uname()) + "' from within '" + os.getcwd() +"' by user '" + getpass.getuser() + "'" )
@@ -40,6 +44,10 @@ def print_script_information():
     log.info(
         "Script version  '" + properties.version + "  r" + properties.revision + "' built on '" + properties.build_date + "'")
 
+def read_file_to_list(filename):
+    with open(filename) as f:
+        list = f.read().splitlines()
+    return list
 
 def read_property_from_file(propertyName, propertiesSectionName, propertiesFilename, warnIfEmpty=True):
     result = ""
@@ -117,8 +125,7 @@ def check_executable_exists(executable, mandatory=False):
     from distutils.spawn import find_executable
     if not find_executable(executable):
         if mandatory:
-            log.fatal("Mandatory executable '{}' wasn't found in your system. Exiting...".format(executable))
-            sys.exit(1)
+            die("Mandatory executable '{}' wasn't found in your system. Exiting...".format(executable))
     else:
         log.info("Executable '{}' was found in your system.".format(executable))
         return True
@@ -139,7 +146,7 @@ def get_class(fully_qualified_path, module_name, class_name, *instantiation):
     instance = c(*instantiation)
     return instance
 
-def get_modified_files(path, reference_timestamp):
+def get_modified_files(path, reference_timestamp, relative_paths=True):
     modified_files = []
     for root, dirs, files in os.walk(path):
         for basename in files:
@@ -148,7 +155,11 @@ def get_modified_files(path, reference_timestamp):
                 status = os.stat(filename)
 
                 if float(status.st_mtime) > float(reference_timestamp):
-                    modified_files.append(filename)
+                    if relative_paths:
+                        modified_files.append(os.path.relpath(filename, path))
+                    else:
+                        modified_files.append(filename)
+
     return modified_files
 
 def ab_path_to_class(path, p):
