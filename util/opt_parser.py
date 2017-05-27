@@ -12,10 +12,9 @@ parser = OptionParser(
 
 # Main options
 mainOptionsGroup = OptionGroup(parser, "Main Options", "(Main script options)")
-mainOptionsGroup.add_option("-i", "--install", action="store_const", const=1, dest="installmode", default=0, help="Deploy code")
-mainOptionsGroup.add_option("-I", "--installc", action="store_const", const=2, dest="installmode", default=0, help="Crosscompile and deploy code")
-mainOptionsGroup.add_option("-u", "--update", action="store_const", const=3, dest="installmode", default=0, help="Update code")
-mainOptionsGroup.add_option("-f", "--format", action="store_const", const=1, dest="format", default=0, help="Format board")
+mainOptionsGroup.add_option("-i", "--install", action="store_true", dest="install", default=False, help="Deploy code")
+mainOptionsGroup.add_option("-C", "--compile",  action="store_true", dest="compile", default=False, help="Crosscompile when deploying code")
+mainOptionsGroup.add_option("-u", "--uninstall", action="store_true", dest="uninstall", default=False, help="Uninstall code")
 mainOptionsGroup.add_option("-c", "--connect", action="store_true", dest="connect", default=False, help="Connect to your board after the operation")
 
 mainOptionsGroup.add_option("-P", "--path", dest="path", help=SUPPRESS_HELP, metavar="<path>", default=os.environ["PWD"])

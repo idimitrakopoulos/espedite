@@ -29,18 +29,18 @@ if parser.options.skip:
     log.info("Reading skip file '{}' ....".format(parser.options.skip))
     skip_files = read_file_to_list(parser.options.path + properties.osDirSeparator + parser.options.skip)
 
-if parser.options.format == 1:
+if parser.options.uninstall:
     # UNINSTALL
     log.info("Uninstalling ....")
 
-if modified_relative_files and parser.options.installmode > 0:
+if modified_relative_files and parser.options.install:
 
-    if parser.options.installmode == 2:
-        # COMPILE / INSTALL
+    if parser.options.compile:
+        # COMPILE
         log.info("Compiling ....")
-        log.info("Installing ....")
 
-    if parser.options.installmode == 3:
+
+    if parser.options.install:
         # UPDATE
         log.info("Updating ....")
         for f in modified_relative_files:
@@ -50,7 +50,8 @@ if modified_relative_files and parser.options.installmode > 0:
             log.debug("Updating file '{}'".format(f))
             execute_shell_command("sudo ampy --port /dev/ttyUSB0 rm {}".format(f))
             execute_shell_command("sudo ampy --port /dev/ttyUSB0 put {}".format(f))
-elif parser.options.installmode > 0:
+
+elif parser.options.install and not modified_relative_files:
     die("No modified files detected. Installation cannot be completed.")
 
 
