@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import time
+import time, os, subprocess
 
 import util.opt_parser as parser
 from util.toolkit import log, check_executable_exists, check_file_exists, properties, \
@@ -8,6 +8,7 @@ from util.toolkit import log, check_executable_exists, check_file_exists, proper
 
 timestamp = 0
 timestamp_file = parser.options.path + properties.osDirSeparator + properties.timeStampFilename
+skip_files = []
 
 # Read timestamp
 if check_file_exists(timestamp_file):
@@ -33,23 +34,41 @@ if parser.options.uninstall:
     # UNINSTALL
     log.info("Uninstalling ....")
 
+    installed_files = execute_shell_command("sudo ampy --port /dev/ttyUSB0 ls /")
+
+    for f in installed_files:
+        log.info("Removing file or folder '{}' ....".format(f))
+        execute_shell_command("sudo ampy --port /dev/ttyUSB0 rmdir {}".format(f), stderr=subprocess.PIPE)
+        execute_shell_command("sudo ampy --port /dev/ttyUSB0 rm {}".format(f), stderr=subprocess.PIPE)
+
+    # Remove timestamp file
+    try:
+        os.remove(timestamp_file)
+        log.info("Removing timestamp file '{}' ....".format(timestamp_file))
+    except OSError:
+        pass
+
 if modified_relative_files and parser.options.install:
 
     if parser.options.compile:
         # COMPILE
         log.info("Compiling ....")
 
-
     if parser.options.install:
-        # UPDATE
-        log.info("Updating ....")
+        log.info("Installing ....")
         for f in modified_relative_files:
             if f in skip_files:
                 log.debug("Skipping '{}' although it was modified".format(f))
                 continue
             log.debug("Updating file '{}'".format(f))
-            execute_shell_command("sudo ampy --port /dev/ttyUSB0 rm {}".format(f))
-            execute_shell_command("sudo ampy --port /dev/ttyUSB0 put {}".format(f))
+
+            execute_shell_command("sudo ampy --port /dev/ttyUSB0 rm {}".format(f), stderr=subprocess.PIPE)
+            execute_shell_command("sudo ampy --port /dev/ttyUSB0 put {} {}".format(parser.options.path + properties.osDirSeparator + f, f))
+
+
+        # Write installation timestamp
+        with open(timestamp_file, "w") as text_file:
+            text_file.write("{}\n".format(time.time()))
 
 elif parser.options.install and not modified_relative_files:
     die("No modified files detected. Installation cannot be completed.")
@@ -61,9 +80,7 @@ if parser.options.connect:
     log.info("Connecting to '{}' ....".format(parser.options.device))
     execute_shell_command("sudo picocom --baud 115200 /dev/ttyUSB0")
 
-# Write timestamp
-with open(timestamp_file, "w") as text_file:
-    text_file.write("{}\n".format(time.time()))
+
 
 # Salute!
 log.info("Bye bye! :-)")
