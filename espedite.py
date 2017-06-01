@@ -4,7 +4,7 @@ import time, os, subprocess
 
 import util.opt_parser as parser
 from util.toolkit import log, check_executable_exists, check_file_exists, properties, \
-    get_modified_files, execute_shell_command, read_file_to_list, die
+    get_modified_files, execute_shell_command, execute_shell_command_get_output, read_file_to_list, die
 
 timestamp = 0
 timestamp_file = parser.options.path + properties.osDirSeparator + properties.timeStampFilename
@@ -34,9 +34,12 @@ if parser.options.uninstall:
     # UNINSTALL
     log.info("Uninstalling ....")
 
-    installed_files = execute_shell_command("sudo ampy --port /dev/ttyUSB0 ls /")
+    installed_files = execute_shell_command_get_output("sudo ampy --port /dev/ttyUSB0 ls /").split("\n")
 
     for f in installed_files:
+        # ampy returns an empty string at the end so skip that
+        if f == "":
+            continue
         log.info("Removing file or folder '{}' ....".format(f))
         execute_shell_command("sudo ampy --port /dev/ttyUSB0 rmdir {}".format(f), stderr=subprocess.PIPE)
         execute_shell_command("sudo ampy --port /dev/ttyUSB0 rm {}".format(f), stderr=subprocess.PIPE)
@@ -47,6 +50,8 @@ if parser.options.uninstall:
         log.info("Removing timestamp file '{}' ....".format(timestamp_file))
     except OSError:
         pass
+
+    log.info("Uninstallation complete ....")
 
 if modified_relative_files and parser.options.install:
 

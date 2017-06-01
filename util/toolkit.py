@@ -36,6 +36,10 @@ def execute_shell_command(command, shell=False, stderr=None):
     log.debug("Executing command '{}'".format(command))
     return subprocess.call(command.split(), shell=shell, stderr=stderr)
 
+def execute_shell_command_get_output(command, shell=False, stderr=None):
+    log.debug("Executing command '{}'".format(command))
+    return subprocess.check_output(command.split(), shell=shell, stderr=stderr)
+
 def print_os_information():
     log.info("Script running on '" + " ".join(platform.uname()) + "' from within '" + os.getcwd() +"' by user '" + getpass.getuser() + "'" )
 
