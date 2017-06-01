@@ -43,7 +43,6 @@ def execute_shell_command_get_output(command, shell=False, stderr=None):
 def print_os_information():
     log.info("Script running on '" + " ".join(platform.uname()) + "' from within '" + os.getcwd() +"' by user '" + getpass.getuser() + "'" )
 
-
 def print_script_information():
     log.info(
         "Script version  '" + properties.version + "  r" + properties.revision + "' built on '" + properties.build_date + "'")
