@@ -13,6 +13,7 @@ from util.toolkit import log, check_executable_exists, check_file_exists, proper
 timestamp = 0
 timestamp_file = parser.options.path + properties.osDirSeparator + properties.timeStampFilename
 skip_files = []
+start_time = time.time()
 
 # Remove any compiled files
 remove_files_by_ext_recursively(parser.options.path, properties.binaryCodeExtension)
@@ -81,12 +82,12 @@ if modified_relative_files and parser.options.install:
                 execute_shell_command("{}/micropython/mpy-cross/mpy-cross {}".format(os.getcwd(), parser.options.path + properties.osDirSeparator + f))
 
 
-    if parser.options.install:
-        log.info("Installation ....")
+    if parser.options.install or parser.options.profile:
+        log.info("Installing ....")
 
         # Create folder structure for modified files
         dir_structure = get_subdirectory_structure_by_filelist(modified_relative_files)
-        log.debug("Creating folder structure (if required)")
+        log.info("Creating folder structure (if required)")
         for d in dir_structure:
             execute_shell_command("sudo ampy --port /dev/ttyUSB0 mkdir {}".format(d), stderr=subprocess.PIPE)
 
@@ -96,7 +97,7 @@ if modified_relative_files and parser.options.install:
             if f in skip_files:
                 log.debug("Skipping '{}' although it was modified".format(f))
                 continue
-            log.debug("Installing file '{}'".format(f))
+            log.info("Installing file '{}'".format(f))
 
             # Remove file to be uploaded
             execute_shell_command("sudo ampy --port /dev/ttyUSB0 rm {}".format(f), stderr=subprocess.PIPE)
@@ -113,9 +114,17 @@ if modified_relative_files and parser.options.install:
                                                                                        os.path.splitext(f)[0] + properties.binaryCodeExtension))
             # Otherwise upload original file
             else:
-
                 execute_shell_command("sudo ampy --port /dev/ttyUSB0 put {} {}".format(parser.options.path + properties.osDirSeparator + f, f))
 
+        # Apply selected profile
+        if parser.options.profile and check_folder_exists("{}/profile/{}".format(parser.options.path, parser.options.profile)):
+            log.info("Applying profile '{}'".format(parser.options.profile))
+            execute_shell_command("sudo ampy --port /dev/ttyUSB0 rm main.py", stderr=subprocess.PIPE)
+            execute_shell_command("sudo ampy --port /dev/ttyUSB0 rm main.mpy", stderr=subprocess.PIPE)
+            execute_shell_command("sudo ampy --port /dev/ttyUSB0 rm conf/profile.properties", stderr=subprocess.PIPE)
+            execute_shell_command("sudo ampy --port /dev/ttyUSB0 put {} {}".format("{}/profile/{}/{}".format(parser.options.path, parser.options.profile, "main.mpy"), "main.mpy"))
+            execute_shell_command("sudo ampy --port /dev/ttyUSB0 put {} {}".format("{}/profile/{}/{}".format(parser.options.path, parser.options.profile, "main.py"), "main.py"))
+            execute_shell_command("sudo ampy --port /dev/ttyUSB0 put {} {}".format("{}/profile/{}/conf/{}".format(parser.options.path, parser.options.profile, "profile.properties"), "conf/profile.properties"))
 
         # Write installation timestamp
         with open(timestamp_file, "w") as text_file:
@@ -134,4 +143,5 @@ if parser.options.connect:
 
 
 # Salute!
+log.info("Execution time '{} sec'".format(time.time() - start_time))
 log.info("Bye bye! :-)")
