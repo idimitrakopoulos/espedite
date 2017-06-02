@@ -7,7 +7,8 @@ import time
 import util.opt_parser as parser
 from util.toolkit import log, check_executable_exists, check_file_exists, properties, \
     get_modified_files, execute_shell_command, execute_shell_command_get_output, read_file_to_list, \
-    check_folder_exists, remove_files_by_ext_recursively,timestamp_to_human_readable, get_subdirectory_structure, die
+    check_folder_exists, remove_files_by_ext_recursively,timestamp_to_human_readable, \
+    get_subdirectory_structure_by_filelist, die
 
 timestamp = 0
 timestamp_file = parser.options.path + properties.osDirSeparator + properties.timeStampFilename
@@ -19,15 +20,14 @@ remove_files_by_ext_recursively(parser.options.path, properties.binaryCodeExtens
 # Read timestamp
 if check_file_exists(timestamp_file):
     with open(timestamp_file, 'r') as f:
-        timestamp = f.readline().strip()
+       timestamp = f.readline().strip()
+       log.debug("Last execution was on {} (UNIX Timestamp: {}) ".format(timestamp_to_human_readable(timestamp), str(timestamp)))
 
 log.info("Running script in path '{}'". format(parser.options.path))
 
 check_executable_exists("ampy", True)
 if parser.options.connect:
     check_executable_exists("picocom", True)
-
-log.debug("Last execution was on {} (UNIX Timestamp: {}) ".format(timestamp_to_human_readable(timestamp), str(timestamp)))
 
 modified_relative_files = get_modified_files(parser.options.path, timestamp, True)
 
@@ -60,8 +60,7 @@ if parser.options.uninstall:
     log.info("Uninstallation complete ....")
 
 if modified_relative_files and parser.options.install:
-    print(get_subdirectory_structure(parser.options.path))
-    die("BYYYEEEEEEEEEE")
+    # print(get_subdirectory_structure(parser.options.path))
 
     if parser.options.compile:
         # COMPILE
@@ -84,18 +83,35 @@ if modified_relative_files and parser.options.install:
 
     if parser.options.install:
         log.info("Installation ....")
+
+        # Create folder structure for modified files
+        dir_structure = get_subdirectory_structure_by_filelist(modified_relative_files)
+        log.debug("Creating folder structure (if required)")
+        for d in dir_structure:
+            execute_shell_command("sudo ampy --port /dev/ttyUSB0 mkdir {}".format(d), stderr=subprocess.PIPE)
+
+        # Do this for all files modified or new
         for f in modified_relative_files:
+            # Skip if it's included in the skip file
             if f in skip_files:
                 log.debug("Skipping '{}' although it was modified".format(f))
                 continue
             log.debug("Installing file '{}'".format(f))
 
+            # Remove file to be uploaded
             execute_shell_command("sudo ampy --port /dev/ttyUSB0 rm {}".format(f), stderr=subprocess.PIPE)
-            if os.path.splitext(f)[1] == properties.sourceCodeExtension: execute_shell_command("sudo ampy --port /dev/ttyUSB0 rm {}{}".format(os.path.splitext(f)[0], properties.binaryCodeExtension), stderr=subprocess.PIPE)
-            if parser.options.compile:
+
+            # Remove compiled file if exist
+            if os.path.splitext(f)[1] == properties.sourceCodeExtension:
+                execute_shell_command("sudo ampy --port /dev/ttyUSB0 rm {}{}".format(os.path.splitext(f)[0],
+                                                                                     properties.binaryCodeExtension), stderr=subprocess.PIPE)
+
+            # Prefer to install compiled file rather than source
+            if parser.options.compile and os.path.splitext(f)[1] == properties.sourceCodeExtension:
                 execute_shell_command("sudo ampy --port /dev/ttyUSB0 put {} {}".format(parser.options.path + properties.osDirSeparator +
                                                                                        os.path.splitext(f)[0] + properties.binaryCodeExtension,
                                                                                        os.path.splitext(f)[0] + properties.binaryCodeExtension))
+            # Otherwise upload original file
             else:
 
                 execute_shell_command("sudo ampy --port /dev/ttyUSB0 put {} {}".format(parser.options.path + properties.osDirSeparator + f, f))

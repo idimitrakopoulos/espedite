@@ -166,21 +166,29 @@ def get_modified_files(path, reference_timestamp, relative_paths=True):
     return modified_files
 
 
-def get_subdirectory_structure(path, relative_paths=True):
-    subdirectories = []
-    exclude = ('.git')
-    for root, dirs, files in os.walk(path, topdown=True):
-        dirs[:] = [d for d in dirs if d not in exclude]
-        for basename in dirs:
-            subdirectory = os.path.join(root, basename)
+# def get_subdirectory_structure(path, relative_paths=True):
+#     subdirectories = []
+#     exclude = ('.git')
+#     for root, dirs, files in os.walk(path, topdown=True):
+#         dirs[:] = [d for d in dirs if d not in exclude]
+#         for basename in dirs:
+#             subdirectory = os.path.join(root, basename)
+#
+#             if relative_paths:
+#                 subdirectories.append(os.path.relpath(subdirectory, path))
+#             else:
+#                 subdirectories.append(subdirectory)
+#
+#     return subdirectories
 
-            if relative_paths:
-                subdirectories.append(os.path.relpath(subdirectory, path))
-            else:
-                subdirectories.append(subdirectory)
+def get_subdirectory_structure_by_filelist(filelist):
+    temp_dir_lst = []
+    for f in filelist:
+        if os.path.dirname(f) == '':
+            continue
+        temp_dir_lst.append(os.path.dirname(f))
 
-    return subdirectories
-
+    return sorted(list(set(temp_dir_lst)))
 
 def ab_path_to_class(path, p):
     # pkg.module.ClassName
