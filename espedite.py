@@ -6,7 +6,8 @@ import time
 
 import util.opt_parser as parser
 from util.toolkit import log, check_executable_exists, check_file_exists, properties, \
-    get_modified_files, execute_shell_command, execute_shell_command_get_output, read_file_to_list, check_folder_exists, remove_files_by_ext_recursively,timestamp_to_human_readable
+    get_modified_files, execute_shell_command, execute_shell_command_get_output, read_file_to_list, \
+    check_folder_exists, remove_files_by_ext_recursively,timestamp_to_human_readable, get_subdirectory_structure, die
 
 timestamp = 0
 timestamp_file = parser.options.path + properties.osDirSeparator + properties.timeStampFilename
@@ -59,13 +60,15 @@ if parser.options.uninstall:
     log.info("Uninstallation complete ....")
 
 if modified_relative_files and parser.options.install:
+    print(get_subdirectory_structure(parser.options.path))
+    die("BYYYEEEEEEEEEE")
 
     if parser.options.compile:
         # COMPILE
         log.info("Compiling ....")
 
         if not check_folder_exists(os.getcwd() + properties.osDirSeparator + "micropython"):
-            log.debug("Compiling the compiler ...")
+            log.debug("Compiling the compiler ..."),
             pushd = os.getcwd()
             execute_shell_command("git clone https://github.com/micropython/micropython")
             os.chdir(os.getcwd() + "/micropython/mpy-cross")
