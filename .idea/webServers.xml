@@ -10,8 +10,8 @@
           <option name="port" value="22" />
         </fileTransfer>
       </webServer>
-      <webServer id="0ee77009-5da1-4b38-8070-6da512f8f1f1" name="paragonium" url="http://paragonium.com">
-        <fileTransfer host="paragonium.com" port="22" rootFolder="/home/idimitrakopoulos" accessType="SFTP" password="dfcedf9bdfccdfccdf84dfdadfcbdf8edf8e" username="idimitrakopoulos">
+      <webServer id="0ee77009-5da1-4b38-8070-6da512f8f1f1" name="jenkins3" url="http://jenkins3">
+        <fileTransfer host="jenkins3" port="22" rootFolder="/home/idimitrakopoulos" accessType="SFTP" password="dfefdfd2dfdfdfd9dfc9dfc5dfdfdfc1df9bdf98df99" username="idimitrakopoulos">
           <advancedOptions>
             <advancedOptions controlEncoding="utf-8" dataProtectionLevel="Private" />
           </advancedOptions>

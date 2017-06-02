@@ -175,7 +175,12 @@ def ab_path_to_class(path, p):
     c = get_class(_p_name, _m_name, _c_name, p)
     return c
 
-
+def remove_files_by_ext_recursively(path, ext):
+    for root, dirs, files in os.walk(path):
+        for currentFile in files:
+            if currentFile.lower().endswith(ext):
+                log.debug("Removing '{}' file '{}'".format(ext, currentFile))
+                os.remove(os.path.join(root, currentFile))
 
 def get_string_from_list(lst, n, s):
     r = False
@@ -186,6 +191,9 @@ def get_string_from_list(lst, n, s):
             break
     return r
 
+def timestamp_to_human_readable(t):
+    import datetime
+    return datetime.datetime.fromtimestamp(float(t)).strftime('%Y-%m-%d %H:%M:%S')
 
 def start_busy_indicator(msg):
     spin = SpinCursor(msg)
@@ -221,6 +229,8 @@ class PropertyReader(object):
         self.script_name = read_property_from_file("scriptName", "variousProperties", self.property_file)
         self.osDirSeparator = read_property_from_file("osDirSeparator", "variousProperties", self.property_file)
         self.timeStampFilename = read_property_from_file("tsFilename", "variousProperties", self.property_file)
+        self.sourceCodeExtension = read_property_from_file("sourceCodeExtension", "variousProperties", self.property_file)
+        self.binaryCodeExtension = read_property_from_file("binaryCodeExtension", "variousProperties", self.property_file)
 
         # [loggingProperties]
         self.custom_logging_format = read_property_from_file("customLoggingFormat", "loggingProperties",

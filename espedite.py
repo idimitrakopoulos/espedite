@@ -1,14 +1,19 @@
 #!/usr/bin/env python
 
-import time, os, subprocess
+import os
+import subprocess
+import time
 
 import util.opt_parser as parser
 from util.toolkit import log, check_executable_exists, check_file_exists, properties, \
-    get_modified_files, execute_shell_command, execute_shell_command_get_output, read_file_to_list, die
+    get_modified_files, execute_shell_command, execute_shell_command_get_output, read_file_to_list, check_folder_exists, remove_files_by_ext_recursively,timestamp_to_human_readable
 
 timestamp = 0
 timestamp_file = parser.options.path + properties.osDirSeparator + properties.timeStampFilename
 skip_files = []
+
+# Remove any compiled files
+remove_files_by_ext_recursively(parser.options.path, properties.binaryCodeExtension)
 
 # Read timestamp
 if check_file_exists(timestamp_file):
@@ -21,7 +26,7 @@ check_executable_exists("ampy", True)
 if parser.options.connect:
     check_executable_exists("picocom", True)
 
-log.info("TIMESTAMP = " + str(timestamp))
+log.debug("Last execution was on {} (UNIX Timestamp: {}) ".format(timestamp_to_human_readable(timestamp), str(timestamp)))
 
 modified_relative_files = get_modified_files(parser.options.path, timestamp, True)
 
@@ -59,16 +64,38 @@ if modified_relative_files and parser.options.install:
         # COMPILE
         log.info("Compiling ....")
 
+        if not check_folder_exists(os.getcwd() + properties.osDirSeparator + "micropython"):
+            log.debug("Compiling the compiler ...")
+            pushd = os.getcwd()
+            execute_shell_command("git clone https://github.com/micropython/micropython")
+            os.chdir(os.getcwd() + "/micropython/mpy-cross")
+            execute_shell_command("make")
+            os.chdir(pushd)
+
+        for f in modified_relative_files:
+            extension = os.path.splitext(f)[1]
+            if extension == properties.sourceCodeExtension:
+                log.info("Compiling file {}".format(f))
+                execute_shell_command("{}/micropython/mpy-cross/mpy-cross {}".format(os.getcwd(), parser.options.path + properties.osDirSeparator + f))
+
+
     if parser.options.install:
-        log.info("Installing ....")
+        log.info("Installation ....")
         for f in modified_relative_files:
             if f in skip_files:
                 log.debug("Skipping '{}' although it was modified".format(f))
                 continue
-            log.debug("Updating file '{}'".format(f))
+            log.debug("Installing file '{}'".format(f))
 
             execute_shell_command("sudo ampy --port /dev/ttyUSB0 rm {}".format(f), stderr=subprocess.PIPE)
-            execute_shell_command("sudo ampy --port /dev/ttyUSB0 put {} {}".format(parser.options.path + properties.osDirSeparator + f, f))
+            if os.path.splitext(f)[1] == properties.sourceCodeExtension: execute_shell_command("sudo ampy --port /dev/ttyUSB0 rm {}{}".format(os.path.splitext(f)[0], properties.binaryCodeExtension), stderr=subprocess.PIPE)
+            if parser.options.compile:
+                execute_shell_command("sudo ampy --port /dev/ttyUSB0 put {} {}".format(parser.options.path + properties.osDirSeparator +
+                                                                                       os.path.splitext(f)[0] + properties.binaryCodeExtension,
+                                                                                       os.path.splitext(f)[0] + properties.binaryCodeExtension))
+            else:
+
+                execute_shell_command("sudo ampy --port /dev/ttyUSB0 put {} {}".format(parser.options.path + properties.osDirSeparator + f, f))
 
 
         # Write installation timestamp
@@ -76,7 +103,7 @@ if modified_relative_files and parser.options.install:
             text_file.write("{}\n".format(time.time()))
 
 elif parser.options.install and not modified_relative_files:
-    die("No modified files detected. Installation cannot be completed.")
+    log.warn("No modified files detected since last execution on {}. Installation skipped.".format(timestamp_to_human_readable(timestamp)))
 
 
 

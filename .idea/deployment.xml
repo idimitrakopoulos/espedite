@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="aimless" traceLevel="DETAILS">
+  <component name="PublishConfigData" autoUpload="Always" serverName="jenkins3" traceLevel="DETAILS">
     <serverData>
       <paths name="aimless">
         <serverdata>
@@ -9,10 +9,10 @@
           </mappings>
         </serverdata>
       </paths>
-      <paths name="paragonium">
+      <paths name="jenkins3">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/dev/espedite" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
