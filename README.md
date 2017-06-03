@@ -16,6 +16,7 @@ A smart micropython codebase deployer for ESP boards. Its abilities include micr
 ## Resources
 
 Github issues list/bugtracker: https://github.com/idimitrakopoulos/espedite/issues
+Micropython www.micropython.org
 
 ## Pre-requisites
 
