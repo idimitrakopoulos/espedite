@@ -57,7 +57,7 @@ user@hostname:~/mycode$ ../espedite/espedite.py -d /dev/ttyUSB0 -u
 Now run the following to deploy your code on the ESP
 
 ```bash
-$ ../espedite/espedite.py -i -C -c
+user@hostname:~/mycode$ ../espedite/espedite.py -i -C -c
 ```
 -i Installs (deploys) your all files and folders from the working folder (plus subfolders) on the board
 -C Cross-compiles all .py files into .mpy and deploys them on the board
