@@ -66,10 +66,11 @@ user@hostname:~/mycode$ ../espedite/espedite.py -i -C -c
 Other options include
 
 * `-s` Specify a skipfile
-...A text file where you can define which files must be skipped (e.g. README.md) during deployment.
-...One line per file with relative paths required (e.g. conf/skipme.txt)
+
+   A text file where you can define which files must be skipped (e.g. README.md) during deployment.
+   One line per file with relative paths required (e.g. conf/skipme.txt)
 * `-b` Specify BAUD rate to connect to your board.
-...Default is 115200
+   Default is 115200
 * `-v` Verbose mode for debugging
 
 # License
