@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="5d2ac5ec-6468-46aa-85d8-a1775d503b8a" name="aimless" url="http://aimless">
+        <fileTransfer host="aimless" port="22" rootFolder="/home/idimitrakopoulos" accessType="SFTP" password="dfc8df9edfc3dfc6df99dfd3dfd9" username="idimitrakopoulos">
+          <advancedOptions>
+            <advancedOptions controlEncoding="utf-8" dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+      <webServer id="0ee77009-5da1-4b38-8070-6da512f8f1f1" name="jenkins3" url="http://jenkins3">
+        <fileTransfer host="jenkins3" port="22" rootFolder="/home/idimitrakopoulos" accessType="SFTP" password="dfefdfd2dfdfdfd9dfc9dfc5dfdfdfc1df9bdf98df99" username="idimitrakopoulos">
+          <advancedOptions>
+            <advancedOptions controlEncoding="utf-8" dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

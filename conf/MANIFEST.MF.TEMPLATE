@@ -1,0 +1,4 @@
+[espedite]
+version = @version@
+revision = @buildNumber@
+buildDate = @buildDate@
