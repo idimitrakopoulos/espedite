@@ -134,6 +134,7 @@ elif parser.options.install and not modified_relative_files:
     log.warn("No modified files detected since last execution on {}. Installation skipped.".format(timestamp_to_human_readable(timestamp)))
 
 
+log.info("Execution time '{} sec'".format(time.time() - start_time))
 
 if parser.options.connect:
     # CONNECT
@@ -143,5 +144,4 @@ if parser.options.connect:
 
 
 # Salute!
-log.info("Execution time '{} sec'".format(time.time() - start_time))
 log.info("Bye bye! :-)")
