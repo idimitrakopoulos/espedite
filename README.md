@@ -50,8 +50,8 @@ Connect your micropython enabled ESP board (espedite assumes /dev/ttyUSB0 by def
 user@hostname:~/mycode$ ../espedite/espedite.py -d /dev/ttyUSB0 -u
 ```
 
--d specifies the device path, you may change it as needed
--u will uninstall (clean-up) any code existing on your board
+* -d specifies the device path, you may change it as needed
+* -u will uninstall (clean-up) any code existing on your board
 
 
 Now run the following to deploy your code on the ESP
@@ -59,15 +59,15 @@ Now run the following to deploy your code on the ESP
 ```bash
 user@hostname:~/mycode$ ../espedite/espedite.py -i -C -c
 ```
--i Installs (deploys) your all files and folders from the working folder (plus subfolders) on the board
--C Cross-compiles all .py files into .mpy and deploys them on the board
--c Connects to the board via picocom
+* -i Installs (deploys) your all files and folders from the working folder (plus subfolders) on the board
+* -C Cross-compiles all .py files into .mpy and deploys them on the board
+* -c Connects to the board via picocom
 
 Other options include
 
--s Specify a skipfile (a text file where you can define which files must be skipped (e.g. README.md) during deployment. One line per file with relative paths required (e.g. conf/skipme.txt))
--b Specify BAUD rate to connect to your board. Default is 115200
--v Verbose mode for debugging
+* -s Specify a skipfile (a text file where you can define which files must be skipped (e.g. README.md) during deployment. One line per file with relative paths required (e.g. conf/skipme.txt))
+* -b Specify BAUD rate to connect to your board. Default is 115200
+* -v Verbose mode for debugging
 
 # License
 
