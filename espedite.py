@@ -15,6 +15,9 @@ timestamp_file = parser.options.path + properties.osDirSeparator + properties.ti
 skip_files = []
 start_time = time.time()
 
+if parser.options.path == os.getcwd() and (parser.options.install or parser.options.skip or parser.options.profile):
+    die("You tried to run espedite from within its own folder. Please cd to your code folder instead and run it from there.")
+
 # Remove any compiled files
 remove_files_by_ext_recursively(parser.options.path, properties.binaryCodeExtension)
 
@@ -112,6 +115,11 @@ if modified_relative_files and parser.options.install:
                 execute_shell_command("sudo ampy --port /dev/ttyUSB0 put {} {}".format(parser.options.path + properties.osDirSeparator +
                                                                                        os.path.splitext(f)[0] + properties.binaryCodeExtension,
                                                                                        os.path.splitext(f)[0] + properties.binaryCodeExtension))
+
+                # Workaround for these two files only since Micropython expects the uncompiled versions to be present as well
+                if f in ['main.py', 'boot.py']:
+                    execute_shell_command("sudo ampy --port /dev/ttyUSB0 put {} {}".format(parser.options.path + properties.osDirSeparator + f, f))
+
             # Otherwise upload original file
             else:
                 execute_shell_command("sudo ampy --port /dev/ttyUSB0 put {} {}".format(parser.options.path + properties.osDirSeparator + f, f))
