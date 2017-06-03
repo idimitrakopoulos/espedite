@@ -40,6 +40,39 @@ Clone the git repository in any local directory by typing the following:
 user@hostname:~$ git clone https://github.com/idimitrakopoulos/espedite
 ```
 
+### Usage
+
+```
+Usage: espedite.py [options]
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+
+  Main Options:
+    (Main script options)
+
+    -i, --install       Deploy code
+    -C, --compile       Crosscompile when deploying code
+    -u, --uninstall     Uninstall code
+    -c, --connect       Connect to your board after the operation
+    -p <profile>, --profile=<profile>
+                        Pre-existing profile
+    -s <skip>, --skip=<skip>
+                        Specify a file that contains files and folders that
+                        should be skipped
+    -d <device>, --device=<device>
+                        Device path of your board
+    -b <baud>, --baud=<baud>
+                        Baud speed for connecting to your board
+
+  Logging Options:
+    (Regulate the logging of the script. Default loglevel: INFO)
+
+    -v, --verbose       Verbose mode (loglevel: DEBUG)
+
+```
+
 Go to your micropython code folder
 
 ```bash
