@@ -1,0 +1,12 @@
+# Compiled source #
+###################
+*.pyc
+*.pyo
+*.mpy
+
+# IDE meta folders #
+####################
+.idea
+
+# Logs and databases #
+######################
