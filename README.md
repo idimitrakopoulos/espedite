@@ -1,6 +1,6 @@
 # espedite
 
-A smart micropython codebase uploader for ESP boards
+A smart micropython codebase deployer for ESP boards. Its abilities include micropython file compilation and incremental deployments.
 
 ## Main Features
 
